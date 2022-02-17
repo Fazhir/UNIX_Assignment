@@ -21,7 +21,7 @@ By inspecting this file, I learned that
 
  1. The file has 2783 rows, 2744038 words, 11051939 characters, and 986 columns. 
  2. The file has data for the nucleotides 'A, T, G, C" in the  A/A, T/T, G/T, C/T, G/G and C/C pairs. 
- 3. The file is 6.5Mb in size 
+ 3. The file is 6.6Mb in size 
  4. The file has no non-ASCII characters
  
  To know how much of the different `Groups` of maize and teosinte we have in the Fang_et_al_genotypes.txt file, I used.
