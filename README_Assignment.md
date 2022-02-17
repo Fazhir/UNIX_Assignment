@@ -134,16 +134,16 @@ I then merged the snp-file with this maize file to formed one composite data fil
  
  ```
  $ module load bioawk
- $ bioawk -c hdr '$Chromosome == "1" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr1.txt
- $ bioawk -c hdr '$Chromosome == "2" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr2.txt
- $ bioawk -c hdr '$Chromosome == "3" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr3.txt
- $ bioawk -c hdr '$Chromosome == "4" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr4.txt
- $ bioawk -c hdr '$Chromosome == "5" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr5.txt
- $ bioawk -c hdr '$Chromosome == "6" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr6.txt
- $ bioawk -c hdr '$Chromosome == "7" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr7.txt
- $ bioawk -c hdr '$Chromosome == "8" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr8.txt
- $ bioawk -c hdr '$Chromosome == "9" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr9.txt
- $ bioawk -c hdr '$Chromosome == "10" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr10.txt
+ $ bioawk -c hdr '$Chromosome == "1" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr1_maize.txt
+ $ bioawk -c hdr '$Chromosome == "2" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr2_maize.txt
+ $ bioawk -c hdr '$Chromosome == "3" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr3_maize.txt
+ $ bioawk -c hdr '$Chromosome == "4" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr4_maize.txt
+ $ bioawk -c hdr '$Chromosome == "5" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr5_maize.txt
+ $ bioawk -c hdr '$Chromosome == "6" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr6_maize.txt
+ $ bioawk -c hdr '$Chromosome == "7" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr7_maize.txt
+ $ bioawk -c hdr '$Chromosome == "8" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr8_maize.txt
+ $ bioawk -c hdr '$Chromosome == "9" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr9_maize.txt
+ $ bioawk -c hdr '$Chromosome == "10" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n > chr10_maize.txt
  ```
  
  ### SNPs ordered based on decreasing position values and missing data encoded by the symbol: - (maize)
