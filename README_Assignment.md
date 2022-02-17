@@ -21,14 +21,15 @@ By inspecting this file, I learned that
 
  1. The file has 2783 rows, 2744038 words, 11051939 characters, and 986 columns. 
  2. The file has data for the nucleotides 'A, T, G, C" in the  A/A, T/T, G/T, C/T, G/G and C/C pairs. 
- 3. The file is 6.6Mb in size 
- 4. The file has no non-ASCII characters
+ 3. The file is 6.5Mb in size 
+ 4. The file has ASCII texts with very long lines.
  
- To know how much of the different `Groups` of maize and teosinte we have in the Fang_et_al_genotypes.txt file, I used.
+To know how much of the different `Groups` of maize and teosinte we have in the Fang_et_al_genotypes.txt file, I used.
 
 ```
 $ grep -v "^#" fang_et_al_genotypes.txt | cut -f3 | sort | uniq -c | sort -n
 ```
+
 This showed me that we have 
  
 - **For maize**
@@ -96,7 +97,7 @@ I then separated the "ZMM" data from the `fang_et_al_genotypes.txt` into a separ
 ```
 $ grep 'ZMM' fang_et_al_genotypes.txt > maize_data.txt
 $ cat headers_fang.txt maize_data.txt > headed_maize.txt
-$ awk -f transpose.awk maize_data.txt > transposed_maize.txt
+$ awk -f transpose.awk headed_maize.txt > transposed_maize.txt
 ```
 
 I then went on to create a transposed maize file that doesnt have headers so that I could sort it. I sorted this and it was ready for merging with the `snp-file`. I confirmed that it had been merged by checking on its number of rows with the `wc -ls` command and also echoed it to comfirm it had been successfully sorted. The "0" echo confirmed it had been sorted while the `wc -l` giving me 983 rows, which was the same number of rows for the snp-file confirmed it had been transposed and ready for merging.
@@ -109,12 +110,12 @@ $ echo $?
 $ wc -l sorted_unheaded_maize.txt
 ```
 
-I then merged the snp-file with this maize file to formed one composite data file and attached snp-headers to check that the joint file is having SNP_ID, Chromosome and position in the first, second and third columns respectively. I confirmed this cutting the first 4 columns. I navigated this joined-file to confirm the merging was successfull by grepping the number of columns it had, which must be the sum of the columns of the two separate file less by one (the common SNP_ID column). 
+ I then merged the snp-file with this maize file to formed one composite data file and attached snp-headers to check that the joint file is having SNP_ID, Chromosome and position in the first, second and third columns respectively. I confirmed this cutting the first 4 columns. I navigated this joined-file to confirm the merging was successfull by grepping the number of columns it had, which must be the sum of the columns of the two separate file less by one (the common SNP_ID column). 
  
  ```
- $ join -1,1 -2,1 -t $'\t' sorted_unheaded_snp.txt sorted_unheaded_maize.txt > joined_maize.txt
+ $ join -1 1 -2 1 -t $'\t' sorted_unheaded_snp.txt sorted_unheaded_maize.txt > joined_maize.txt
  $ cut -f1,2,3,4 joined_maize.txt | head -n 4
- $ tail -n +5 joined_maize.txt | awk -F "\t" '{print NF; exit}
+ $ tail -n +5 joined_maize.txt | awk -F "\t" '{print NF; exit}'
  ```
  
  I then attached headers to this file
@@ -148,28 +149,28 @@ I then merged the snp-file with this maize file to formed one composite data fil
  
  ### SNPs ordered based on decreasing position values and missing data encoded by the symbol: - (maize)
  
- I used the same `bioawk` command but sorted in the reversed order using `-r` in specifications.
+ I used the same `bioawk` command but sorted in the reversed order using `rn` in specifications.
  
  I then piped the results of `sort` to `sed` to identify and replace the "?", which represented missing values in the original files, with "-".
  
  I then sent the final results to a separate file. I used the same command for all the chromosomes
  
  ```
- $ bioawk -c hdr '$Chromosome == "1" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr1_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "2" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr2_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "3" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr3_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "4" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr4_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "5" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr5_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "6" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr6_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "7" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr7_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "8" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr8_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "9" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr9_rev_maize.txt
- $ bioawk -c hdr '$Chromosome == "10" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr10_rev_maize.txt
- ```
+  $ bioawk -c hdr '$Chromosome == "1" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr1_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "2" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr2_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "3" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr3_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "4" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr4_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "5" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr5_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "6" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr6_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "7" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr7_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "8" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr8_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "9" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr9_rev_maize.txt
+  $ bioawk -c hdr '$Chromosome == "10" {print $0}' head_joined_maize.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr10_rev_maize.txt
+  ```
 Just to be sure that the substitution was successfull with `sed`, I could `less` the created file and then search for th new substitute. This would show me the points where it had been placed. I did this for all the files as I created them.
 
 ```
-$ less chr3_rev.txt
+$ less chr3_rev_maize.txt
 #/-
 ```
 
@@ -178,9 +179,9 @@ $ less chr3_rev.txt
 Just to get familiar with other programs, I decided to gather these with `awk`. This command looks for the specific column and searched for the specified component  in the file of interest then send results to the file you name. In order to check if the file I had was the one I wanted, I `cut` the first 5 columns and looked at the first 20 rows using `head` and the last 20 rows using `tail`. 
 
 ```
-$ awk -F "\t" '$3 ~ /unknown/' head_joined_maize.txt > unknown_position.txt
-$ cut -f1,2,3,4,5 unknown_position.txt | head -n 20
-$ cut -f1,2,3,4,5 unknown_position.txt | tail -n 20
+$ awk -F "\t" '$3 ~ /unknown/' head_joined_maize.txt > unknown_position_maize.txt
+$ cut -f1,2,3,4,5 unknown_position_maize.txt | head -n 20
+$ cut -f1,2,3,4,5 unknown_position_maize.txt | tail -n 20
 ```
 
 ### SNPs with multiple positions (maize)
@@ -188,29 +189,29 @@ $ cut -f1,2,3,4,5 unknown_position.txt | tail -n 20
 I also used `awk` to obtain this file and as well checked it using the `cut` command.
 
 ```
-$ awk -F "\t" '$3 ~ /multiple/' head_joined_maize.txt > multiple_position.txt
-$ cut -f1,2,3,4,5 multiple_position.txt | head -n 20
-$ cut -f1,2,3,4,5 multiple_position.txt | tail -n 20
+$ awk -F "\t" '$3 ~ /multiple/' head_joined_maize.txt > multiple_position_maize.txt
+$ cut -f1,2,3,4,5 multiple_position_maize.txt | head -n 20
+$ cut -f1,2,3,4,5 multiple_position_maize.txt | tail -n 20
 ```
 
 ## Teosinte
 
-In order to process the data file and obtain 22 files for Teosinte, I followed the same steps and used the same command lines as used for the Maize data above but separated the data that corresponded to "ZMP" which was for teosinte. For this reason, I will eliminate the wording for the respective command lines and simply write my entire snippet below.
+In order to process the data file and obtain 22 files for Teosinte, I followed the same steps and used the same command lines as used for the Maize data above. For this reason, I will eliminate the wording for the respective command lines and simply write my entire snippet below.
 
 ### Making the joint Teosinte file was done as follows
 
 ```
 $ grep 'ZMP' fang_et_al_genotypes.txt > teosinite_data.txt
 $ cat headers_fang.txt teosinite_data.txt > headed_teosinite.txt
-$ awk -f transpose.awk teosinite_data.txt > transposed_teosinite.txt
+$  awk -f transpose.awk headed_teosinite.txt > transposed_teosinite.txt
 $ tail -n +4 transposed_teosinite.txt > unheaded_transposed_teosinite.txt
 $ sort -k1,1 unheaded_transposed_teosinite.txt > sorted_unheaded_teosinite.txt
 $ sort -k1,1 -c sorted_unheaded_teosinite.txt
 $ echo $?
 $ wc -l sorted_unheaded_teosinite.txt
-$ join -1,1 -2,1 -t $'\t' sorted_unheaded_snp.txt sorted_unheaded_teosinite.txt > joined_teosinite.txt
+$ join -1 1 -2 1 -t $'\t' sorted_unheaded_snp.txt sorted_unheaded_teosinite.txt > joined_teosinite.txt
 $ cut -f1,2,3,4 joined_teosinite.txt | head -n 4
-$ tail -n +5 joined_teosinite.txt | awk -F "\t" '{print NF; exit}
+$ tail -n +5 joined_teosinite.txt | awk -F "\t" '{print NF; exit}'
 $ cat headers_snp_position.txt joined_teosinite.txt > head_joined_teosinite.txt
 ```
 
@@ -233,22 +234,22 @@ $ bioawk -c hdr '$Chromosome == "10" {print $0}' head_joined_teosinite.txt | sor
 ### SNPs ordered based on decreasing position values and missing data encoded by the symbol: - (teosinte)
 
 ```
-$ bioawk -c hdr '$Chromosome == "1" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr1_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "2" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr2_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "3" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr3_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "4" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr4_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "5" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr5_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "6" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr6_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "7" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr7_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "8" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr8_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "9" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr9_rev_teosinite.txt
-$ bioawk -c hdr '$Chromosome == "10" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3n -r | sed 's/?/-/g' > chr10_rev_teosinite.txt
- ```
+$ bioawk -c hdr '$Chromosome == "1" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr1_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "2" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr2_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "3" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr3_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "4" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr4_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "5" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr5_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "6" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr6_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "7" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr7_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "8" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr8_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "9" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr9_rev_teosinite.txt
+$ bioawk -c hdr '$Chromosome == "10" {print $0}' head_joined_teosinite.txt | sort -t $'\t' -k3,3rn | sed 's/?/-/g' > chr10_rev_teosinite.txt
+```
   
 To check if the substitution was successful, I used `less` and searched for the "-" using `#/-`
   
 ```
-less chr3_rev_teosinite.txt
+$ less chr3_rev_teosinite.txt
 #/-
 ```
 
@@ -267,6 +268,3 @@ $ awk -F "\t" '$3 ~ /multiple/' head_joined_teosinite.txt > multiple_position_te
 $ cut -f1,2,3,4,5 multiple_position_teosinite.txt | head -n 20
 $ cut -f1,2,3,4,5 multiple_position_teosinite.txt | tail -n 20
 ```
-
-
-
